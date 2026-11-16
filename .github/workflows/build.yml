@@ -1,0 +1,27 @@
+name: Build PS4 PKG
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: openorbis/toolchain:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build EBOOT and PKG
+        run: |
+          make
+          make pkg
+
+      - name: Upload PKG Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PS4-Controller-Bridge-PKG
+          path: "*.pkg"
